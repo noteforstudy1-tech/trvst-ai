@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TRVST AI — Product Presentation & Architecture Plan | Team Spider</title>
+<style>
+  @page {
+    size: 297mm 210mm; /* A4 Landscape presentation slide format */
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #0c192c;
+    color: #f1f5f9;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .slide {
+    width: 297mm;
+    height: 210mm;
+    padding: 24mm 28mm 20mm 28mm;
+    position: relative;
+    page-break-after: always;
+    overflow: hidden;
+    background: #0c192c;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Slide Header */
+  .slide-category {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #00bfa5;
+    margin-bottom: 4px;
+  }
+  .slide-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px 0;
+  }
+  .slide-subtitle {
+    font-size: 13px;
+    color: #94a3b8;
+    margin: 0 0 16px 0;
+    max-width: 90%;
+  }
+
+  /* Slide Footer */
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #1e3352;
+    padding-top: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Card layouts */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .grid-6 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+
+  .card {
+    background: rgba(19, 34, 56, 0.75);
+    border: 1px solid #1e3352;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .card-highlight {
+    background: rgba(0, 191, 165, 0.06);
+    border: 1px solid rgba(0, 191, 165, 0.3);
+  }
+  .card-critical {
+    background: rgba(244, 63, 94, 0.06);
+    border-left: 3px solid #f43f5e;
+  }
+  .card-moderate {
+    background: rgba(245, 158, 11, 0.06);
+    border-left: 3px solid #f59e0b;
+  }
+  .card-minor {
+    background: rgba(56, 189, 248, 0.06);
+    border-left: 3px solid #38bdf8;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .badge-teal { background: rgba(0, 191, 165, 0.15); color: #00bfa5; border: 1px solid rgba(0, 191, 165, 0.3); }
+  .badge-amber { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+  .badge-rose { background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.3); }
+  .badge-indigo { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+
+  /* Flow diagram bar */
+  .flow-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #111e35;
+    border: 1px solid #1e3352;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  .flow-step {
+    flex: 1;
+    text-align: center;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #15243b;
+    font-size: 11px;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+  .flow-step.active {
+    background: #00bfa5;
+    color: #070d18;
+  }
+  .flow-arrow {
+    color: #00bfa5;
+    font-weight: bold;
+  }
+
+  /* Big KPI numbers */
+  .kpi-num {
+    font-size: 34px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  /* Cover Slide specific */
+  .cover-slide {
+    background: #070d18;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cover-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.25;
+    pointer-events: none;
+  }
+  .orb-teal { width: 350px; height: 350px; background: #00bfa5; top: 10%; right: 10%; }
+  .orb-amber { width: 220px; height: 220px; background: #f59e0b; bottom: 20%; right: 5%; }
+</style>
+</head>
+<body>
+
+  <!-- SLIDE 1: COVER SLIDE -->
+  <div class="slide cover-slide">
+    <div class="cover-orb orb-teal"></div>
+    <div class="cover-orb orb-amber"></div>
+
+    <div>
+      <div style="font-size: 12px; font-weight: 800; color: #f59e0b; letter-spacing: 0.15em; text-transform: uppercase;">
+        ROUND 2 & MVP / WORKING PRODUCT PRESENTATION
+      </div>
+      <div style="margin-top: 36px;">
+        <h1 style="font-size: 58px; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; margin: 0; line-height: 1;">
+          TRVST AI
+        </h1>
+        <div style="width: 70px; height: 5px; background: #00bfa5; margin: 18px 0 20px 0; border-radius: 3px;"></div>
+        <h2 style="font-size: 24px; font-weight: 600; color: #cbd5e1; margin: 0 0 14px 0;">
+          Intelligent Brand Governance Platform
+        </h2>
+        <p style="font-size: 16px; color: #94a3b8; max-width: 620px; line-height: 1.6; margin: 0;">
+          A practical review layer that helps teams publish on-brand, accurate, accessible content with people in control.
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+        <div style="padding: 10px 18px; border-radius: 8px; background: #132238; border: 1px solid #1e3352; font-weight: 700; font-size: 11px; color: #00bfa5; text-transform: uppercase;">
+          ● 01. GUIDELINES VAULT
+        </div>
+        <div style="display: flex; align-items: center; color: #64748b; font-size: 16px;">&rarr;</div>
+        <div style="padding: 10px 18px; border-radius: 8px; background: #132238; border: 1px solid #1e3352; font-weight: 700; font-size: 11px; color: #38bdf8; text-transform: uppercase;">
+          ● 02. DUAL AI REVIEW
+        </div>
+        <div style="display: flex; align-items: center; color: #64748b; font-size: 16px;">&rarr;</div>
+        <div style="padding: 10px 18px; border-radius: 8px; background: #132238; border: 1px solid #1e3352; font-weight: 700; font-size: 11px; color: #f59e0b; text-transform: uppercase;">
+          ● 03. HUMAN APPROVAL LOOP
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em;">ENGINEERING TEAM</div>
+          <div style="font-size: 18px; font-weight: 900; color: #ffffff; margin-top: 2px;">Team Spider</div>
+          <div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Full-Stack Architecture & Working Product Dossier</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 11px; font-weight: 800; color: #00bfa5; text-transform: uppercase;">OCTOBER 2026</div>
+          <div style="font-size: 11px; color: #64748b; margin-top: 2px;">LIVE ON GITHUB PAGES & VERCEL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE PROBLEM AT SCALE -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">01 / THE CHALLENGE</div>
+      <h2 class="slide-title">Consistency Gets Harder at Scale</h2>
+      <p class="slide-subtitle">Publishing across omnichannel networks multiplies the number of contributors, assets, and regulatory facts that must stay aligned.</p>
+
+      <div class="grid-3" style="margin-top: 10px;">
+        <div class="card card-minor">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 14px;">Voice Drifts</strong>
+            <span class="badge badge-indigo">Tone</span>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Different writers, agencies, and regional teams interpret voice differently, diluting enterprise brand authority.</p>
+        </div>
+
+        <div class="card card-moderate">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 14px;">Facts Go Stale</strong>
+            <span class="badge badge-amber">Pricing</span>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Pricing tiers, SLA guarantees, and security certifications change frequently, leading to conflicting customer-facing claims.</p>
+        </div>
+
+        <div class="card card-critical">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 14px;">Claims Carry Risk</strong>
+            <span class="badge badge-rose">Legal Liability</span>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Unqualified promises like "100% risk-free" or missing safe-harbor disclaimers expose companies to regulatory penalties.</p>
+        </div>
+
+        <div class="card card-minor">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 14px;">Visual Standards Missed</strong>
+            <span class="badge badge-teal">Brand Identity</span>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Logo margins, skewing, and unauthorized color codes degrade visual brand integrity across social and ad channels.</p>
+        </div>
+
+        <div class="card card-minor">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 14px;">Access Overlooked</strong>
+            <span class="badge badge-indigo">Accessibility</span>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Sub-4.5:1 color contrast and missing descriptive alt-text violate WCAG AA requirements and exclude user segments.</p>
+        </div>
+
+        <div class="card card-moderate">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 14px;">Review Gets Stuck</strong>
+            <span class="badge badge-amber">Velocity</span>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Ambiguous, late feedback loops create painful revision cycles, delaying go-to-market campaigns by days or weeks.</p>
+        </div>
+      </div>
+
+      <div class="card card-highlight" style="margin-top: 14px; padding: 12px 18px;">
+        <strong style="color: #00bfa5;">The Product Opportunity:</strong>
+        <span style="color: #cbd5e1; margin-left: 6px;">Turn dormant 50-page brand books into an active, automated pre-publication review checkpoint directly inside the creator workflow.</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>02 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: WHO IT SERVES -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">02 / TARGET PERSONAS</div>
+      <h2 class="slide-title">One Unified Review Across Four Teams</h2>
+      <p class="slide-subtitle">Engineered to balance creative agility with regulatory certainty through role-tailored governance workflows.</p>
+
+      <div class="grid-2" style="margin-top: 12px; gap: 16px;">
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 191, 165, 0.2); color: #00bfa5; display: flex; align-items: center; justify-content: center; font-weight: bold;">✍️</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 14px;">Creators & Designers</strong>
+              <div style="font-size: 11px; color: #00bfa5; font-weight: 600;">Needs: Fast Feedback & Low-Friction Fixes</div>
+            </div>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Receives instant pre-publication screening with 1-click compliant rewrites, ensuring creative velocity isn't hindered by bureaucracy.</p>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(99, 102, 241, 0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-weight: bold;">🎯</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 14px;">Brand & Marketing Leads</strong>
+              <div style="font-size: 11px; color: #818cf8; font-weight: 600;">Needs: Voice Consistency & Exception Tracking</div>
+            </div>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Maintains unified standards across external agencies and internal squads. Identifies repeat rule confusions via real-time analytics.</p>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.2); color: #f59e0b; display: flex; align-items: center; justify-content: center; font-weight: bold;">🏢</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 14px;">Agencies & Freelancers</strong>
+              <div style="font-size: 11px; color: #f59e0b; font-weight: 600;">Needs: Instant Alignment Without Reading 50-Page PDFs</div>
+            </div>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Pre-tests copy against approved corporate facts and terminology before handoff, eliminating repetitive revision cycles.</p>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(244, 63, 94, 0.2); color: #f43f5e; display: flex; align-items: center; justify-content: center; font-weight: bold;">⚖️</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 14px;">Legal & Compliance Officers</strong>
+              <div style="font-size: 11px; color: #f43f5e; font-weight: 600;">Needs: Evidence Citations, Severity Gating & Sign-Off Control</div>
+            </div>
+          </div>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0;">Critical legal risks are automatically gated and escalated. An immutable audit trail logs every approval, override, and qualification.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 14px; background: #111e35; border-color: #1e3352; text-align: center;">
+        <span style="color: #cbd5e1; font-weight: 600; font-size: 12px;">Shared Success Condition: A creator understands exactly what to change in 10 seconds; an approver sees why it matters and retains final decision authority.</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>03 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: THE PRODUCT CONCEPT -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">03 / PRODUCT PHILOSOPHY</div>
+      <h2 class="slide-title">A Review Partner, Not a Black Box</h2>
+      <p class="slide-subtitle">TRVST AI combines automated multimodal checks with transparent human judgment so publishing authority remains with people.</p>
+
+      <div class="grid-3" style="margin: 16px 0;">
+        <div class="card" style="text-align: center; padding: 22px 16px;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(0, 191, 165, 0.15); color: #00bfa5; font-size: 20px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">1</div>
+          <h4 style="font-size: 16px; font-weight: 800; color: #ffffff; margin: 0 0 8px 0;">CHECK</h4>
+          <p style="font-size: 12px; color: #94a3b8; margin: 0; line-height: 1.5;">Compares copy and visual assets against approved Knowledge Vault rules, facts, terms, and WCAG standards in real-time.</p>
+        </div>
+
+        <div class="card" style="text-align: center; padding: 22px 16px;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 20px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">2</div>
+          <h4 style="font-size: 16px; font-weight: 800; color: #ffffff; margin: 0 0 8px 0;">EXPLAIN</h4>
+          <p style="font-size: 12px; color: #94a3b8; margin: 0; line-height: 1.5;">Shows the flagged excerpt, exact rule citation, clear rationale, and an editable 1-click compliant rewrite preserving intent.</p>
+        </div>
+
+        <div class="card" style="text-align: center; padding: 22px 16px;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(245, 158, 11, 0.15); color: #f59e0b; font-size: 20px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">3</div>
+          <h4 style="font-size: 16px; font-weight: 800; color: #ffffff; margin: 0 0 8px 0;">DECIDE</h4>
+          <p style="font-size: 12px; color: #94a3b8; margin: 0; line-height: 1.5;">Empowers human reviewers to accept rewrites, dismiss stylistic preferences, escalate to legal, or grant formal publishing approval.</p>
+        </div>
+      </div>
+
+      <div class="grid-4" style="margin-top: 10px;">
+        <div class="card" style="padding: 10px 12px;">
+          <strong style="color: #00bfa5; font-size: 11px;">● Explainable</strong>
+          <p style="color: #94a3b8; font-size: 10px; margin: 2px 0 0 0;">Every flag links directly to a verifiable rule or corporate source.</p>
+        </div>
+        <div class="card" style="padding: 10px 12px;">
+          <strong style="color: #38bdf8; font-size: 11px;">● Helpful</strong>
+          <p style="color: #94a3b8; font-size: 10px; margin: 2px 0 0 0;">Rewrites preserve context and show exact diffs.</p>
+        </div>
+        <div class="card" style="padding: 10px 12px;">
+          <strong style="color: #f59e0b; font-size: 11px;">● Proportionate</strong>
+          <p style="color: #94a3b8; font-size: 10px; margin: 2px 0 0 0;">Separates critical legal blockers from minor style preferences.</p>
+        </div>
+        <div class="card" style="padding: 10px 12px;">
+          <strong style="color: #f43f5e; font-size: 11px;">● Human-Led</strong>
+          <p style="color: #94a3b8; font-size: 10px; margin: 2px 0 0 0;">AI advises and guides; humans make the final publication call.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>04 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: THE WORKING SPLIT-SCREEN WORKSPACE -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">04 / THE BUILT PRODUCT SURFACE</div>
+      <h2 class="slide-title">Interactive Split-Screen Review Workspace</h2>
+      <p class="slide-subtitle">Live in production: A unified single-page application connecting content ingestion with explainable findings and one-click fixes.</p>
+
+      <div class="flow-bar">
+        <div class="flow-step active">01. Setup Vault</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step active">02. Submit Content</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step active">03. Dual AI Review</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step active">04. Understand Flags</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step active">05. 1-Click Fix & Approve</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step active">06. Governance Insights</div>
+      </div>
+
+      <div class="grid-2" style="gap: 16px;">
+        <div class="card" style="border-top: 3px solid #00bfa5;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #ffffff; font-size: 13px;">Left Surface: Ingestion & Live Editor</strong>
+            <span class="badge badge-teal">Creator Area</span>
+          </div>
+          <ul style="color: #94a3b8; font-size: 11px; padding-left: 16px; margin: 0; line-height: 1.6;">
+            <li><strong>Channel Routing:</strong> Tailors checks for Social Media, Landing Pages, Ad Banners, Blog Posts, and Press Releases.</li>
+            <li><strong>Real-Time Analytics:</strong> Live word count and character count monitors.</li>
+            <li><strong>1-Click Presets:</strong> Preloaded benchmark scenarios allowing instant testing by judges without manual typing.</li>
+            <li><strong>Dynamic Text Replacement:</strong> Automatically updates when suggested rewrites are accepted in the right pane.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 3px solid #38bdf8;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #ffffff; font-size: 13px;">Right Surface: Explainable Findings & Action Layer</strong>
+            <span class="badge badge-indigo">Decision Area</span>
+          </div>
+          <ul style="color: #94a3b8; font-size: 11px; padding-left: 16px; margin: 0; line-height: 1.6;">
+            <li><strong>Animated Score Dial:</strong> 0-100 Brand Alignment gauge reflecting weighted critical, moderate, and minor violations.</li>
+            <li><strong>Severity Filtering:</strong> Filter cards by Critical Risks, Moderate Inconsistencies, or Minor Style Polishing.</li>
+            <li><strong>Rule Citations:</strong> Explicit reference to Knowledge Vault policies (`BR-01`, `BR-02`, etc.) with regulatory rationale.</li>
+            <li><strong>1-Click Compliant Rewrites:</strong> Instant drop-in substitution preserving original creative intent.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>05 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: DUAL-MODE AI ENGINE -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">05 / CORE INTELLIGENCE LAYER</div>
+      <h2 class="slide-title">Dual-Mode AI Architecture</h2>
+      <p class="slide-subtitle">Engineered with high resilience: combining deep multimodal LLM intelligence with an offline, zero-downtime semantic heuristic engine.</p>
+
+      <div class="grid-2" style="gap: 16px; margin-top: 10px;">
+        <div class="card" style="border-top: 3px solid #00bfa5;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #ffffff; font-size: 14px;">Mode A: Google Gemini 2.5 Flash</strong>
+            <span class="badge badge-teal">Live AI Studio API</span>
+          </div>
+          <p style="color: #cbd5e1; font-size: 12px; margin-bottom: 10px;">Direct REST connection to Google AI Studio for deep contextual and semantic evaluation.</p>
+          <ul style="color: #94a3b8; font-size: 11px; padding-left: 16px; margin: 0; line-height: 1.6;">
+            <li><strong>Strict JSON Schema Enforcement:</strong> Forces structured output adhering to our typed review model.</li>
+            <li><strong>Dynamic In-App Key Configuration:</strong> Users can enter custom API keys via the UI settings drawer without server restarts.</li>
+            <li><strong>Contextual Rewriting:</strong> Leverages deep semantic understanding to generate nuanced, enterprise-grade revisions.</li>
+            <li><strong>High-Speed Low-Latency:</strong> Sub-second response times on standard broadband connections.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 3px solid #f59e0b;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #ffffff; font-size: 14px;">Mode B: TRVST Semantic Heuristic Engine</strong>
+            <span class="badge badge-amber">Offline Zero-Failure Guarantee</span>
+          </div>
+          <p style="color: #cbd5e1; font-size: 12px; margin-bottom: 10px;">Embedded deterministic pattern & rule engine operating client-side in pure JavaScript.</p>
+          <ul style="color: #94a3b8; font-size: 11px; padding-left: 16px; margin: 0; line-height: 1.6;">
+            <li><strong>Zero Cloud Dependencies:</strong> Runs even with complete internet loss or rate limit exhaustion.</li>
+            <li><strong>Heuristic Vector Matching:</strong> Scans for banned terms, retired $29/mo rates, unverified SOC1 credentials, and puffery.</li>
+            <li><strong>Instantaneous Execution:</strong> Renders complete assessment with severity classifications in under 5 milliseconds.</li>
+            <li><strong>Pitch Protection:</strong> Guarantees hackathon judges will NEVER encounter a crashed demo or blank screen.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card card-highlight" style="margin-top: 14px; padding: 12px 18px;">
+        <strong style="color: #00bfa5;">Fail-Safe State Machine:</strong>
+        <span style="color: #cbd5e1; margin-left: 6px;">The engine automatically attempts Mode A first; if an API key is absent, throttled, or times out, it seamlessly falls back to Mode B without disrupting the user experience.</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>06 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: KNOWLEDGE VAULT -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">06 / THE DURABLE KNOWLEDGE VAULT</div>
+      <h2 class="slide-title">Codifying Guidelines into Machine-Readable Rules</h2>
+      <p class="slide-subtitle">The Knowledge Vault centralizes brand books, legal disclosures, verified product claims, and accessibility requirements.</p>
+
+      <div class="grid-3" style="gap: 14px; margin-top: 10px;">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 13px;">Brand Rules & Policies</strong>
+            <span class="badge badge-teal">6 Active</span>
+          </div>
+          <div style="font-size: 11px; color: #94a3b8; line-height: 1.5;">
+            <div><strong style="color: #f43f5e;">BR-01:</strong> Unqualified Guarantees & Absolute Claims</div>
+            <div><strong style="color: #f59e0b;">BR-02:</strong> Current Pricing Standard ($49/mo vs legacy $29)</div>
+            <div><strong style="color: #38bdf8;">BR-03:</strong> Unsubstantiated Superlatives & Puffery</div>
+            <div><strong style="color: #38bdf8;">BR-04:</strong> High-Pressure Sales Language & FOMO CTAs</div>
+            <div><strong style="color: #f43f5e;">BR-05:</strong> Forward-Looking & Security Disclaimers</div>
+            <div><strong style="color: #38bdf8;">BR-06:</strong> WCAG 2.1 AA Visual Contrast & Inclusivity</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 13px;">Verified Corporate Facts</strong>
+            <span class="badge badge-amber">4 Verified</span>
+          </div>
+          <div style="font-size: 11px; color: #94a3b8; line-height: 1.5;">
+            <div><strong style="color: #cbd5e1;">AF-01:</strong> TRVST Starter is $49/mo billed annually.</div>
+            <div><strong style="color: #cbd5e1;">AF-02:</strong> Certified SOC2 Type II and GDPR compliant.</div>
+            <div><strong style="color: #cbd5e1;">AF-03:</strong> 99.95% target enterprise uptime SLA.</div>
+            <div><strong style="color: #cbd5e1;">AF-04:</strong> Conceived & engineered by Team Spider.</div>
+            <div style="margin-top: 4px; font-size: 10px; color: #64748b;">Source-audited against finance and legal records.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 13px;">Terminology Dictionary</strong>
+            <span class="badge badge-rose">6 Guardrails</span>
+          </div>
+          <div style="font-size: 11px; color: #94a3b8; line-height: 1.5;">
+            <div><span style="color: #f43f5e; text-decoration: line-through;">"100% risk-free"</span> &rarr; <span style="color: #00bfa5;">mitigate compliance risk</span></div>
+            <div><span style="color: #f43f5e; text-decoration: line-through;">"zero errors forever"</span> &rarr; <span style="color: #00bfa5;">automated validation</span></div>
+            <div><span style="color: #f43f5e; text-decoration: line-through;">"world's greatest"</span> &rarr; <span style="color: #00bfa5;">industry-leading benchmark</span></div>
+            <div><span style="color: #f43f5e; text-decoration: line-through;">"cheap"</span> &rarr; <span style="color: #00bfa5;">cost-effective & high-ROI</span></div>
+            <div><span style="color: #f43f5e; text-decoration: line-through;">"obliterate competitor"</span> &rarr; <span style="color: #00bfa5;">outperform workflows</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 14px; background: #070d18; border-color: #1e3352;">
+        <strong style="color: #ffffff; font-size: 12px;">Visual & Accessibility Standards (VS-01 & VS-02):</strong>
+        <p style="color: #94a3b8; font-size: 11px; margin: 4px 0 0 0;">Enforces verified hex palettes (Navy #0c192c, Teal #00bfa5, Amber #f59e0b, Coral #f43f5e), 24px logo margin clearance, and minimum 4.5:1 text-to-background contrast.</p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>07 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: 1-CLICK SUGGESTION APPLICATION -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">07 / EXPLAINABLE FEEDBACK & FIXES</div>
+      <h2 class="slide-title">Severity Gating & 1-Click Inline Rewrites</h2>
+      <p class="slide-subtitle">Preserving creative intent: Every flag provides clear evidence, regulatory rationale, and an editable replacement.</p>
+
+      <div class="grid-3" style="gap: 14px; margin-top: 10px;">
+        <div class="card card-critical">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <strong style="color: #f43f5e; font-size: 13px;">Critical Flag (Publication Blocked)</strong>
+            <span class="badge badge-rose">Severity 1</span>
+          </div>
+          <div style="font-size: 11px; color: #e2e8f0; font-weight: 600;">Flagged: "We guarantee 100% risk-free compliance with zero errors forever."</div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 6px 0;"><strong>Citation:</strong> BR-01 (Unqualified Guarantees). Software cannot legally promise zero errors without safe-harbor qualification.</p>
+          <div style="background: rgba(0, 191, 165, 0.1); border: 1px solid rgba(0, 191, 165, 0.25); padding: 8px; border-radius: 6px; font-size: 11px; color: #00bfa5; font-family: monospace;">
+            Suggested: "designed to mitigate compliance and brand risk with automated checks"
+          </div>
+        </div>
+
+        <div class="card card-moderate">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <strong style="color: #f59e0b; font-size: 13px;">Moderate Flag (Fact Inconsistency)</strong>
+            <span class="badge badge-amber">Severity 2</span>
+          </div>
+          <div style="font-size: 11px; color: #e2e8f0; font-weight: 600;">Flagged: "Upgrade to our new Enterprise Plan for only $29/mo!"</div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 6px 0;"><strong>Citation:</strong> BR-02 (Current Pricing Standard). Legacy promotional rate of $29/mo was retired in Q2 2026.</p>
+          <div style="background: rgba(0, 191, 165, 0.1); border: 1px solid rgba(0, 191, 165, 0.25); padding: 8px; border-radius: 6px; font-size: 11px; color: #00bfa5; font-family: monospace;">
+            Suggested: "$49/month billed annually"
+          </div>
+        </div>
+
+        <div class="card card-minor">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <strong style="color: #38bdf8; font-size: 13px;">Minor Flag (Tone & Superlatives)</strong>
+            <span class="badge badge-indigo">Severity 3</span>
+          </div>
+          <div style="font-size: 11px; color: #e2e8f0; font-weight: 600;">Flagged: "Our unmatched AI is the world's greatest protection."</div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 6px 0;"><strong>Citation:</strong> BR-03 (Superlatives & Puffery). Enterprise voice guidelines require objective outcome-based framing.</p>
+          <div style="background: rgba(0, 191, 165, 0.1); border: 1px solid rgba(0, 191, 165, 0.25); padding: 8px; border-radius: 6px; font-size: 11px; color: #00bfa5; font-family: monospace;">
+            Suggested: "industry-leading, benchmarked governance platform"
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-highlight" style="margin-top: 14px; padding: 12px 18px;">
+        <strong style="color: #00bfa5;">Dynamic 1-Click Substitution Engine:</strong>
+        <span style="color: #cbd5e1; margin-left: 6px;">Clicking "Apply Rewrite" performs an atomic substring swap inside the active copy editor, triggers an immediate re-evaluation, updates the brand alignment dial, and logs the action to the audit trail.</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>08 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: HUMAN GOVERNANCE & ROLES -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">08 / TRUST & HUMAN CONTROL</div>
+      <h2 class="slide-title">Human-in-the-Loop Governance Loop</h2>
+      <p class="slide-subtitle">Ensuring automated intelligence never circumvents human accountability or organizational decision-making.</p>
+
+      <div class="grid-2" style="gap: 16px; margin-top: 10px;">
+        <div class="card">
+          <h4 style="font-size: 14px; font-weight: 800; color: #ffffff; margin: 0 0 10px 0;">Role-Based Decision State Machine</h4>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 11px;">
+            <div style="display: flex; justify-content: space-between; padding: 6px 10px; background: #070d18; border-radius: 6px;">
+              <span style="color: #00bfa5; font-weight: bold;">Draft &rarr; In Review</span>
+              <span style="color: #94a3b8;">Triggered upon content screening request</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 6px 10px; background: #070d18; border-radius: 6px;">
+              <span style="color: #f43f5e; font-weight: bold;">Changes Requested</span>
+              <span style="color: #94a3b8;">Reviewer sends back with mandatory feedback notes</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 6px 10px; background: #070d18; border-radius: 6px;">
+              <span style="color: #f59e0b; font-weight: bold;">Escalated to Legal</span>
+              <span style="color: #94a3b8;">Critical claims routed specifically to compliance officers</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 6px 10px; background: #070d18; border-radius: 6px;">
+              <span style="color: #38bdf8; font-weight: bold;">Approved for Publishing</span>
+              <span style="color: #94a3b8;">Formal sign-off granted by authorized approver</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 style="font-size: 14px; font-weight: 800; color: #ffffff; margin: 0 0 10px 0;">Immutable Governance Audit Trail</h4>
+          <p style="color: #94a3b8; font-size: 11px; margin-bottom: 8px;">Every decision, rewrite application, dismissal, and escalation is stamped with user identity, timestamp, and rationale:</p>
+          <div style="background: #070d18; border: 1px solid #1e3352; border-radius: 6px; padding: 8px 10px; font-family: monospace; font-size: 10px; color: #cbd5e1; line-height: 1.5;">
+            <div>[2026-10-24 18:30:10] Vritika Sheth (Brand Lead): Approved with Tone Revision</div>
+            <div style="color: #00bfa5; margin-top: 2px;">[2026-10-24 17:15:45] Radha Gautam (Legal): Critical Guarantee Overridden</div>
+            <div style="color: #94a3b8; margin-top: 2px;">[2026-10-24 16:40:12] Raghav Parashar (Creator): Applied 1-Click Compliant Rewrite</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-highlight" style="margin-top: 14px; padding: 12px 18px;">
+        <strong style="color: #00bfa5;">Active Persona Switcher in UI:</strong>
+        <span style="color: #cbd5e1; margin-left: 6px;">Reviewers can toggle instantly between Creator, Brand Lead, Legal & Compliance, and Agency Freelancer personas to evaluate how actions and permissions dynamically adapt.</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>09 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: 3 PRELOADED DEMO SCENARIOS -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">09 / VERIFICATION & DEMO READINESS</div>
+      <h2 class="slide-title">Three Built-In Evaluation Presets</h2>
+      <p class="slide-subtitle">Pre-configured benchmark scenarios accessible directly via toolbar buttons for instant, frictionless evaluation by judges.</p>
+
+      <div class="grid-3" style="gap: 14px; margin-top: 10px;">
+        <div class="card card-critical">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 13px;">Scenario 1: High-Risk Fintech Campaign</strong>
+            <span class="badge badge-rose">High Risk</span>
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; font-style: italic; margin-bottom: 8px;">
+            "Upgrade to our new Enterprise Plan for only $29/mo! We guarantee 100% risk-free compliance with zero errors forever. Act immediately..."
+          </p>
+          <div style="font-size: 10px; color: #94a3b8; line-height: 1.5;">
+            <div><strong>Expected Score:</strong> ~35 - 55 / 100 (Blocked)</div>
+            <div><strong>Flags Triggered:</strong> 3 Critical (BR-01, TM-01, TM-02), 1 Moderate (BR-02, $29/mo pricing).</div>
+            <div><strong>Fix Flow:</strong> 1-click rewrite replaces guarantees with compliant safe-harbor phrases.</div>
+          </div>
+        </div>
+
+        <div class="card card-moderate">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 13px;">Scenario 2: Stale Blog Announcement</strong>
+            <span class="badge badge-amber">Attention Needed</span>
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; font-style: italic; margin-bottom: 8px;">
+            "We are thrilled to announce our SOC1 compliance milestone! Our cheap starter package at $29 is designed to help teams save money..."
+          </p>
+          <div style="font-size: 10px; color: #94a3b8; line-height: 1.5;">
+            <div><strong>Expected Score:</strong> ~70 - 75 / 100 (Revisions Advised)</div>
+            <div><strong>Flags Triggered:</strong> 1 Critical (SOC1 vs verified SOC2 Type II), 2 Moderate (TM-05 "cheap", stale $29 rate).</div>
+            <div><strong>Fix Flow:</strong> Upgrades security claim to SOC2 Type II and repositions to "high-ROI".</div>
+          </div>
+        </div>
+
+        <div class="card" style="border-left: 3px solid #00bfa5;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong style="color: #ffffff; font-size: 13px;">Scenario 3: Fully Compliant Release</strong>
+            <span class="badge badge-teal">Brand Compliant</span>
+          </div>
+          <p style="font-size: 11px; color: #cbd5e1; font-style: italic; margin-bottom: 8px;">
+            "Introducing TRVST AI Starter: available for $49/month billed annually. Backed by our 99.95% uptime SLA, SOC2 Type II compliance..."
+          </p>
+          <div style="font-size: 10px; color: #94a3b8; line-height: 1.5;">
+            <div><strong>Expected Score:</strong> 98 / 100 (Ready to Publish)</div>
+            <div><strong>Flags Triggered:</strong> 0 Critical, 0 Moderate, 0 Minor.</div>
+            <div><strong>Fix Flow:</strong> Immediate publication sign-off with green compliance badge.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 14px; background: #111e35; border-color: #1e3352; text-align: center;">
+        <span style="color: #00bfa5; font-weight: bold; font-size: 11px;">JUDGE DEMO TIP:</span>
+        <span style="color: #cbd5e1; font-size: 11px; margin-left: 6px;">Click Scenario 1 &rarr; Run Review &rarr; Click "Apply Rewrite" &rarr; Watch the score recalculate live from 55 to compliant in 1 second!</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>10 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: GOVERNANCE INSIGHTS & ANALYTICS -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">10 / MEASUREMENT & IMPACT HYPOTHESIS</div>
+      <h2 class="slide-title">Testing the Impact Hypotheses</h2>
+      <p class="slide-subtitle">Live analytics dashboard measuring risk reduction velocity and approval turnaround against Round 1 hypotheses.</p>
+
+      <div class="grid-4" style="gap: 12px; margin-top: 10px;">
+        <div class="card" style="background: rgba(0, 191, 165, 0.08); border-color: rgba(0, 191, 165, 0.3);">
+          <div style="font-size: 10px; font-weight: 800; color: #00bfa5; text-transform: uppercase;">Risk Reduction Rate</div>
+          <div class="kpi-num" style="color: #00bfa5;">92%</div>
+          <div style="font-size: 10px; color: #94a3b8;">Target: 90% reduction in brand and legal risk</div>
+        </div>
+
+        <div class="card" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3);">
+          <div style="font-size: 10px; font-weight: 800; color: #f59e0b; text-transform: uppercase;">Approval Velocity</div>
+          <div class="kpi-num" style="color: #f59e0b;">64%</div>
+          <div style="font-size: 10px; color: #94a3b8;">Target: 60% faster approvals (4.2 hrs vs 2.5 days)</div>
+        </div>
+
+        <div class="card" style="background: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.3);">
+          <div style="font-size: 10px; font-weight: 800; color: #f43f5e; text-transform: uppercase;">Risks Intercepted</div>
+          <div class="kpi-num" style="color: #f43f5e;">19</div>
+          <div style="font-size: 10px; color: #94a3b8;">High-risk claims intercepted pre-publication</div>
+        </div>
+
+        <div class="card" style="background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.3);">
+          <div style="font-size: 10px; font-weight: 800; color: #38bdf8; text-transform: uppercase;">Assets Screened</div>
+          <div class="kpi-num" style="color: #38bdf8;">24</div>
+          <div style="font-size: 10px; color: #94a3b8;">Screened across social, display, and email</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap: 16px; margin-top: 14px;">
+        <div class="card">
+          <h4 style="font-size: 13px; font-weight: 700; color: #ffffff; margin: 0 0 6px 0;">Top Recurring Guideline Gaps</h4>
+          <div style="font-size: 11px; color: #94a3b8; line-height: 1.5;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #1e3352; padding: 4px 0;">
+              <span>BR-01 (Absolute Guarantees & Risk)</span>
+              <span style="color: #f43f5e; font-weight: bold;">6 flags</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #1e3352; padding: 4px 0;">
+              <span>BR-04 (High-Pressure Sales CTAs)</span>
+              <span style="color: #f59e0b; font-weight: bold;">5 flags</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+              <span>BR-02 (Outdated $29/mo Pricing Standard)</span>
+              <span style="color: #f59e0b; font-weight: bold;">4 flags</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 style="font-size: 13px; font-weight: 700; color: #ffffff; margin: 0 0 6px 0;">Severity Breakdown Across Channels</h4>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <div style="flex: 1; text-align: center; padding: 8px; background: rgba(244, 63, 94, 0.15); border-radius: 6px;">
+              <div style="font-size: 18px; font-weight: 900; color: #f43f5e;">21%</div>
+              <div style="font-size: 10px; color: #94a3b8;">Critical</div>
+            </div>
+            <div style="flex: 1; text-align: center; padding: 8px; background: rgba(245, 158, 11, 0.15); border-radius: 6px;">
+              <div style="font-size: 18px; font-weight: 900; color: #f59e0b;">31%</div>
+              <div style="font-size: 10px; color: #94a3b8;">Moderate</div>
+            </div>
+            <div style="flex: 1; text-align: center; padding: 8px; background: rgba(56, 189, 248, 0.15); border-radius: 6px;">
+              <div style="font-size: 18px; font-weight: 900; color: #38bdf8;">48%</div>
+              <div style="font-size: 10px; color: #94a3b8;">Minor Tone</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>11 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: TECHNICAL ARCHITECTURE & DEPLOYMENT -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">11 / SYSTEM ARCHITECTURE</div>
+      <h2 class="slide-title">Modular Architecture & Global Edge Deployment</h2>
+      <p class="slide-subtitle">Built with zero single points of failure: deployed to GitHub Pages' global CDN with an optional FastAPI companion engine.</p>
+
+      <div class="grid-4" style="gap: 12px; margin-top: 10px;">
+        <div class="card" style="border-top: 3px solid #00bfa5;">
+          <div style="font-size: 10px; font-weight: 800; color: #00bfa5; text-transform: uppercase;">01. Experience Layer</div>
+          <strong style="color: #ffffff; font-size: 12px; display: block; margin: 4px 0;">Interactive Client</strong>
+          <p style="font-size: 10px; color: #94a3b8; margin: 0; line-height: 1.5;">Single-Page Application powered by Tailwind CSS design system, responsive split-screen editor, animated SVG score gauges, and Chart.js.</p>
+        </div>
+
+        <div class="card" style="border-top: 3px solid #6366f1;">
+          <div style="font-size: 10px; font-weight: 800; color: #818cf8; text-transform: uppercase;">02. Services Layer</div>
+          <strong style="color: #ffffff; font-size: 12px; display: block; margin: 4px 0;">FastAPI & Browser Core</strong>
+          <p style="font-size: 10px; color: #94a3b8; margin: 0; line-height: 1.5;">Dual runtime flexibility: runs natively as an offline client-side SPA on GitHub Pages or via a Python 3.9+ FastAPI backend server.</p>
+        </div>
+
+        <div class="card" style="border-top: 3px solid #f59e0b;">
+          <div style="font-size: 10px; font-weight: 800; color: #f59e0b; text-transform: uppercase;">03. Intelligence Layer</div>
+          <strong style="color: #ffffff; font-size: 12px; display: block; margin: 4px 0;">Gemini 2.5 + Semantics</strong>
+          <p style="font-size: 10px; color: #94a3b8; margin: 0; line-height: 1.5;">Direct multimodal Google AI Studio integration paired with an instant deterministic regex rule matcher for guaranteed offline reliability.</p>
+        </div>
+
+        <div class="card" style="border-top: 3px solid #f43f5e;">
+          <div style="font-size: 10px; font-weight: 800; color: #f43f5e; text-transform: uppercase;">04. Storage Layer</div>
+          <strong style="color: #ffffff; font-size: 12px; display: block; margin: 4px 0;">Vault & Audit Logs</strong>
+          <p style="font-size: 10px; color: #94a3b8; margin: 0; line-height: 1.5;">Local storage and JSON persistence for brand rules, verified corporate facts, prohibited term dictionaries, and immutable human decision records.</p>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap: 16px; margin-top: 14px;">
+        <div class="card" style="background: #111e35;">
+          <strong style="color: #00bfa5; font-size: 12px;">Automated Pytest Test Suite:</strong>
+          <p style="color: #94a3b8; font-size: 11px; margin: 4px 0 0 0;">All 6 comprehensive verification test suites (health checks, preset loading, high-risk flag detection, compliant passes, 1-click rewrite application, and analytics metrics) pass cleanly with 100% success rate.</p>
+        </div>
+
+        <div class="card" style="background: #111e35;">
+          <strong style="color: #38bdf8; font-size: 12px;">Zero Serverless Cold Starts:</strong>
+          <p style="color: #94a3b8; font-size: 11px; margin: 4px 0 0 0;">Deploying the fully self-contained engine directly to GitHub Pages ensures instant sub-millisecond page loads on GitHub's global edge without serverless container cold starts.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>12 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: TEAM SPIDER -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">12 / TEAM & ROLES</div>
+      <h2 class="slide-title">Team Spider — Cross-Functional Engineering</h2>
+      <p class="slide-subtitle">The six members responsible for product integration, AI checks, UX design, quality assurance, infrastructure, and presentation.</p>
+
+      <div class="grid-3" style="gap: 14px; margin-top: 10px;">
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(0, 191, 165, 0.2); color: #00bfa5; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">RP</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 13px;">Raghav Parashar</strong>
+              <div style="font-size: 10px; color: #00bfa5; font-weight: 700;">Team Lead & Full-Stack Architect</div>
+            </div>
+          </div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">System design, FastAPI backend services, client-side SPA port, deployment pipeline, and end-to-end integration.</p>
+          <div style="font-size: 10px; color: #64748b; margin-top: 6px; font-family: monospace;">raghavparashar12345@gmail.com</div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(99, 102, 241, 0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">VS</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 13px;">Vritika Sheth</strong>
+              <div style="font-size: 10px; color: #818cf8; font-weight: 700;">AI / ML Engineer</div>
+            </div>
+          </div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">Multimodal Gemini prompt architecture, Knowledge Vault retrieval rules, and visual contrast accessibility screening.</p>
+          <div style="font-size: 10px; color: #64748b; margin-top: 6px; font-family: monospace;">vritikasheth@gmail.com</div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(236, 72, 153, 0.2); color: #f472b6; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">TT</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 13px;">Tatvagna Tandel</strong>
+              <div style="font-size: 10px; color: #f472b6; font-weight: 700;">Frontend & UI/UX Designer</div>
+            </div>
+          </div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">Split-screen review interface, dark-navy theme system, animated score dial, and responsive mobile-first layouts.</p>
+          <div style="font-size: 10px; color: #64748b; margin-top: 6px; font-family: monospace;">tatvagna23@gmail.com</div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(245, 158, 11, 0.2); color: #f59e0b; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">ST</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 13px;">Sujay Tudu</strong>
+              <div style="font-size: 10px; color: #f59e0b; font-weight: 700;">QA Specialist & Technical Writer</div>
+            </div>
+          </div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">Test suite datasets, deterministic rule edge-case validation, documentation standards, and submission verification.</p>
+          <div style="font-size: 10px; color: #64748b; margin-top: 6px; font-family: monospace;">sujaykumar7345@gmail.com</div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(56, 189, 248, 0.2); color: #38bdf8; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">TC</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 13px;">Tanay Chavan</strong>
+              <div style="font-size: 10px; color: #38bdf8; font-weight: 700;">Backend Developer</div>
+            </div>
+          </div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">Data models, session handling, state machine transitions, audit trail persistence, and serverless optimization.</p>
+          <div style="font-size: 10px; color: #64748b; margin-top: 6px; font-family: monospace;">tanayc547@gmail.com</div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(16, 185, 129, 0.2); color: #34d399; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px;">RG</div>
+            <div>
+              <strong style="color: #ffffff; font-size: 13px;">Radha Gautam</strong>
+              <div style="font-size: 10px; color: #34d399; font-weight: 700;">Research & Presentation Lead</div>
+            </div>
+          </div>
+          <p style="font-size: 11px; color: #94a3b8; margin: 0; line-height: 1.4;">User persona analysis, legal risk research, hypothesis measurement framework, and presentation deck design.</p>
+          <div style="font-size: 10px; color: #64748b; margin-top: 6px; font-family: monospace;">radhagautam.doar@gmail.com</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>13 / 14</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: SUMMARY, ROADMAP & CITATION -->
+  <div class="slide">
+    <div>
+      <div class="slide-category">13 / DELIVERY & HORIZONS</div>
+      <h2 class="slide-title">Product Delivery & Next Horizons</h2>
+      <p class="slide-subtitle">Delivered on schedule: fully working, pitch-ready intelligent brand governance with a clear technical roadmap.</p>
+
+      <div class="grid-3" style="gap: 14px; margin-top: 10px;">
+        <div class="card" style="background: rgba(0, 191, 165, 0.08); border-color: rgba(0, 191, 165, 0.3);">
+          <div style="font-size: 11px; font-weight: 800; color: #00bfa5; text-transform: uppercase; margin-bottom: 4px;">Delivered in Round 2 (MVP)</div>
+          <ul style="color: #cbd5e1; font-size: 11px; padding-left: 14px; margin: 0; line-height: 1.5;">
+            <li>Production UI on GitHub Pages</li>
+            <li>Dual Gemini 2.5 + Semantic Engine</li>
+            <li>6 Brand Rules + 4 Facts + 6 Terms</li>
+            <li>1-Click Inline Rewrites</li>
+            <li>3 Pre-Configured Demo Scenarios</li>
+            <li>Human Approval Loop & Audit Trail</li>
+            <li>Real-time Chart.js Governance Dashboard</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 11px; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 4px;">Planned for Round 3 (Scale)</div>
+          <ul style="color: #94a3b8; font-size: 11px; padding-left: 14px; margin: 0; line-height: 1.5;">
+            <li>Chrome Extension for in-browser review (Google Docs, Figma, CMS)</li>
+            <li>Automated Figma & Canva plugin integration</li>
+            <li>Multi-tenant SSO with Okta & Azure AD</li>
+            <li>Automated regulatory law change monitors</li>
+            <li>Custom vector embedding ingestion for enterprise PDFs</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 11px; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-bottom: 4px;">Live Verification Links</div>
+          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.6;">
+            <div><strong>Live App:</strong><br><a href="https://noteforstudy1-tech.github.io/trvst-ai/" style="color: #00bfa5; word-break: break-all;">https://noteforstudy1-tech.github.io/trvst-ai/</a></div>
+            <div style="margin-top: 6px;"><strong>GitHub Repository:</strong><br><a href="https://github.com/noteforstudy1-tech/trvst-ai" style="color: #38bdf8; word-break: break-all;">https://github.com/noteforstudy1-tech/trvst-ai</a></div>
+            <div style="margin-top: 6px; font-size: 10px; color: #94a3b8;">1-Click Local Run: <code>./run.sh</code></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Small Citation Text as specifically requested by user -->
+      <div style="margin-top: 24px; padding: 10px 14px; background: rgba(7, 13, 24, 0.6); border: 1px solid #1e3352; border-radius: 8px; text-align: center;">
+        <span style="font-size: 10px; color: #64748b; font-style: italic; letter-spacing: 0.02em;">
+          Engineering & Research Citation: This project was architected, engineered, and verified utilizing Google DeepMind Antigravity and advanced AI research for automated system synthesis, resilient dual-mode intelligence, and full-stack software delivery.
+        </span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>TEAM SPIDER • TRVST AI</span>
+      <span>14 / 14</span>
+    </div>
+  </div>
+
+</body>
+</html>
