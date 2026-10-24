@@ -34,11 +34,18 @@ app.add_middleware(
 # Vercel Serverless Path Resolver Middleware
 @app.middleware("http")
 async def vercel_path_resolver(request: Request, call_next):
-    # When deployed on Vercel with rewrites, Vercel may rewrite path to /api/index.py
-    # and pass the original matched path in 'x-matched-path' or 'x-forwarded-uri'
-    matched_path = request.headers.get("x-matched-path") or request.headers.get("x-forwarded-uri")
-    if matched_path and request.scope.get("path") in ["/api/index.py", "/index.py", "/api"]:
-        request.scope["path"] = matched_path
+    # 1. Check for explicit _path query param passed by Vercel rewrite
+    target_path = request.query_params.get("_path")
+    if target_path:
+        clean_path = target_path.split("?")[0]
+        if not clean_path.startswith("/"):
+            clean_path = "/" + clean_path
+        request.scope["path"] = clean_path
+    else:
+        # 2. Check for Vercel gateway matched path header
+        matched_path = request.headers.get("x-matched-path") or request.headers.get("x-forwarded-uri")
+        if matched_path and request.scope.get("path") in ["/api/index.py", "/index.py", "/api"]:
+            request.scope["path"] = matched_path
 
     response = await call_next(request)
     return response
