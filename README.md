@@ -2,6 +2,12 @@
 > **A practical review layer that helps teams publish on-brand, accurate, accessible content with people in control.**  
 > *Developed by Team Spider for Round 1 & MVP Submission — October 2026*
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnoteforstudy1-tech%2Ftrvst-ai&env=GEMINI_API_KEY)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-noteforstudy1--tech%2Ftrvst--ai-181717?style=flat&logo=github)](https://github.com/noteforstudy1-tech/trvst-ai)
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?logo=fastapi)](https://fastapi.tiangolo.com)
+[![Gemini 2.0](https://img.shields.io/badge/AI-Google%20Gemini%202.0-8E75B2?logo=google)](https://aistudio.google.com)
+
 ---
 
 ## 🌟 Executive Summary
