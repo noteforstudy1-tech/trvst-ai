@@ -73,7 +73,7 @@ body {
 
 /* Score Circle Animation */
 .score-circle {
-  transition: stroke-dashoffset 1s ease-in-out;
+  transition: stroke-dashoffset 0.8s ease-in-out;
 }
 
 /* Highlight badge styling */
@@ -100,12 +100,4 @@ body {
 }
 .animate-pulse-subtle {
   animation: pulseSubtle 3s infinite ease-in-out;
-}
-
-/* Interactive diff highlight */
-.inline-flag {
-  background-color: rgba(244, 63, 94, 0.25);
-  border-bottom: 2px dashed #f43f5e;
-  padding: 0 2px;
-  border-radius: 2px;
 }
