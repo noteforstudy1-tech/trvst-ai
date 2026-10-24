@@ -1,0 +1,256 @@
+import json
+from pathlib import Path
+from typing import List, Dict, Optional, Any
+from app.models.schemas import (
+    BrandRule, ApprovedFact, TerminologyTerm, VisualStandard,
+    FindingCategory, FindingSeverity, QuickPreset
+)
+from app.config import settings
+
+VAULT_FILE = settings.data_dir / "knowledge_vault.json"
+
+DEFAULT_RULES: List[Dict[str, Any]] = [
+    {
+        "id": "BR-01",
+        "category": "legal_compliance",
+        "title": "Unqualified Guarantees & Absolute Claims",
+        "rule_text": "Never publish unverified absolute claims like '100% risk-free', 'zero errors guaranteed', or 'no loss possible'. Legal requires qualification and safe-harbor disclosures.",
+        "rationale": "Protects against regulatory penalties and consumer deception lawsuits.",
+        "severity_default": "critical",
+        "active": True
+    },
+    {
+        "id": "BR-02",
+        "category": "fact_accuracy",
+        "title": "Current Pricing Standard & Legacy Rates",
+        "rule_text": "Standard Starter tier is $49/month billed annually. Enterprise tiers require tailored quotation. References to outdated promotional pricing (such as $29/mo) are strictly prohibited.",
+        "rationale": "Prevents pricing discrepancy, customer churn, and contract disputes.",
+        "severity_default": "moderate",
+        "active": True
+    },
+    {
+        "id": "BR-03",
+        "category": "brand_voice",
+        "title": "Unsubstantiated Superlatives & Puffery",
+        "rule_text": "Avoid superlative hype like 'world's greatest', 'unrivaled by all', or 'best in history'. Frame value propositions objectively around measurable user outcomes.",
+        "rationale": "Preserves our brand identity as an authoritative, trusted partner.",
+        "severity_default": "minor",
+        "active": True
+    },
+    {
+        "id": "BR-04",
+        "category": "brand_voice",
+        "title": "High-Pressure FOMO & Aggressive Sales Language",
+        "rule_text": "Avoid aggressive panic-inducing CTAs like 'Act immediately before it's gone forever!' or 'Don't be left behind!'. Use confident, consultative invitations such as 'Schedule a demo today'.",
+        "rationale": "Empathetic, transparent brand voice builds long-term enterprise trust.",
+        "severity_default": "minor",
+        "active": True
+    },
+    {
+        "id": "BR-05",
+        "category": "legal_compliance",
+        "title": "Forward-Looking Roadmap & Security Disclaimers",
+        "rule_text": "All public mentions of security certifications must reflect SOC2 Type II (not SOC1) and GDPR compliance. Any future roadmaps must state 'Features subject to development timeline'.",
+        "rationale": "Ensures factual enterprise credibility during customer procurement.",
+        "severity_default": "critical",
+        "active": True
+    },
+    {
+        "id": "BR-06",
+        "category": "accessibility_visual",
+        "title": "Visual Contrast & Accessibility Inclusivity",
+        "rule_text": "All visual banners and UI elements must conform to WCAG 2.1 AA standards (minimum 4.5:1 text-to-background contrast). Provide descriptive alt text for all campaign visuals.",
+        "rationale": "Guarantees digital accessibility across all customer demographics.",
+        "severity_default": "minor",
+        "active": True
+    }
+]
+
+DEFAULT_FACTS: List[Dict[str, Any]] = [
+    {
+        "id": "AF-01",
+        "topic": "Pricing & Packaging",
+        "claim": "TRVST Starter is $49/month billed annually. Enterprise tiers require custom SLA quotation.",
+        "verified_source": "Official Pricing Matrix v2.4 (Finance Approved)",
+        "valid_until": "2026-12-31",
+        "active": True
+    },
+    {
+        "id": "AF-02",
+        "topic": "Security & Compliance",
+        "claim": "TRVST AI is certified SOC2 Type II compliant and GDPR compliant.",
+        "verified_source": "Security & Audit Committee Report Q3 2026",
+        "valid_until": "2026-12-31",
+        "active": True
+    },
+    {
+        "id": "AF-03",
+        "topic": "System Reliability",
+        "claim": "99.95% target uptime SLA with round-the-clock enterprise support.",
+        "verified_source": "Engineering Operations SLA Charter 2026",
+        "valid_until": "2026-12-31",
+        "active": True
+    },
+    {
+        "id": "AF-04",
+        "topic": "Founding Team & Lineage",
+        "claim": "TRVST AI is engineered by Team Spider (Raghav Parashar, Vritika Sheth, Tatvagna Tandel, Sujay Tudu, Tanay Chavan, Radha Gautam).",
+        "verified_source": "Team Spider Architecture Proposal Round 1",
+        "valid_until": "2026-12-31",
+        "active": True
+    }
+]
+
+DEFAULT_TERMS: List[Dict[str, Any]] = [
+    {
+        "id": "TM-01",
+        "term": "100% risk-free",
+        "status": "forbidden",
+        "suggested_replacement": "designed to mitigate compliance and brand risk",
+        "context_note": "Absolute guarantee forbidden by legal review team."
+    },
+    {
+        "id": "TM-02",
+        "term": "zero errors forever",
+        "status": "forbidden",
+        "suggested_replacement": "continuous high-accuracy automated checks",
+        "context_note": "Engineering disclaimer: software cannot promise zero defects forever."
+    },
+    {
+        "id": "TM-03",
+        "term": "world's greatest",
+        "status": "forbidden",
+        "suggested_replacement": "industry-leading, benchmarked governance platform",
+        "context_note": "Unquantified puffery violates brand style guidelines."
+    },
+    {
+        "id": "TM-04",
+        "term": "act immediately before it's gone",
+        "status": "forbidden",
+        "suggested_replacement": "explore our enterprise solutions today",
+        "context_note": "High pressure sales tactic contradicts transparent brand persona."
+    },
+    {
+        "id": "TM-05",
+        "term": "cheap",
+        "status": "forbidden",
+        "suggested_replacement": "cost-effective and high-ROI",
+        "context_note": "Devalues enterprise positioning."
+    },
+    {
+        "id": "TM-06",
+        "term": "obliterate competitor",
+        "status": "forbidden",
+        "suggested_replacement": "outperform legacy manual workflows",
+        "context_note": "Aggressive combative phrasing forbidden."
+    }
+]
+
+DEFAULT_VISUALS: List[Dict[str, Any]] = [
+    {
+        "id": "VS-01",
+        "element": "Brand Color Palette",
+        "rule_spec": "Primary Navy (#0c192c), Accent Teal (#00bfa5), Amber Warning (#f59e0b), Coral Alert (#f43f5e).",
+        "wcag_standard": "WCAG 2.1 AA",
+        "allowed_hex": ["#0c192c", "#00bfa5", "#f59e0b", "#f43f5e", "#ffffff"]
+    },
+    {
+        "id": "VS-02",
+        "element": "Logo Clear Space",
+        "rule_spec": "Maintain minimum 24px clear margin around TRVST AI badge. Do not skew or recolor.",
+        "wcag_standard": "Brand Standards Guide v1",
+        "allowed_hex": None
+    }
+]
+
+PRESETS: List[QuickPreset] = [
+    QuickPreset(
+        id="preset-high-risk",
+        name="⚠️ Scenario 1: High-Risk Fintech / SaaS Campaign",
+        channel="Ad Banner & Social",
+        description="Contains unverified absolute guarantees, outdated $29 pricing, and forbidden FOMO phrases.",
+        content_text="Upgrade to our new Enterprise Plan for only $29/mo! We guarantee 100% risk-free compliance with zero errors forever. Act immediately before it's gone - our unmatched AI is the world's greatest protection against regulators and will obliterate competitors with zero effort.",
+        expected_findings_summary="3 Critical Flags (Absolute Guarantees, Forbidden Terminology, Aggressive Claims), 1 Moderate Flag (Outdated Pricing $29/mo)."
+    ),
+    QuickPreset(
+        id="preset-stale-blog",
+        name="📄 Scenario 2: Stale Blog Announcement",
+        channel="Blog Post & Email",
+        description="Features outdated SOC1 certification claims and devaluing language.",
+        content_text="We are thrilled to announce our SOC1 compliance milestone! Our cheap starter package at $29 is designed to help teams save money while delivering foolproof content verification.",
+        expected_findings_summary="1 Critical Flag (Outdated SOC1 instead of SOC2 Type II), 2 Moderate Flags (Outdated pricing, Devaluing term 'cheap')."
+    ),
+    QuickPreset(
+        id="preset-compliant",
+        name="✅ Scenario 3: Fully Compliant Launch Campaign",
+        channel="Launch Announcement",
+        description="Properly cites approved pricing, accurate uptime SLA, and professional consultative tone.",
+        content_text="Introducing TRVST AI Starter: available for $49/month billed annually. Engineered to help teams publish on-brand, accurate, and accessible content with people in control. Backed by our 99.95% uptime SLA, SOC2 Type II compliance, and human-in-the-loop governance.",
+        expected_findings_summary="100% Brand Compliant (0 Critical Flags, 0 Moderate Flags. Ready for Instant Publication)."
+    )
+]
+
+class KnowledgeVaultService:
+    def __init__(self):
+        self._load_or_initialize()
+
+    def _load_or_initialize(self):
+        if VAULT_FILE.exists():
+            try:
+                with open(VAULT_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self.rules = [BrandRule(**r) for r in data.get("rules", DEFAULT_RULES)]
+                    self.facts = [ApprovedFact(**f) for f in data.get("facts", DEFAULT_FACTS)]
+                    self.terms = [TerminologyTerm(**t) for t in data.get("terms", DEFAULT_TERMS)]
+                    self.visuals = [VisualStandard(**v) for v in data.get("visuals", DEFAULT_VISUALS)]
+                    return
+            except Exception as e:
+                print(f"[KnowledgeVault] Error reading vault cache: {e}, re-initializing defaults.")
+        
+        self.rules = [BrandRule(**r) for r in DEFAULT_RULES]
+        self.facts = [ApprovedFact(**f) for f in DEFAULT_FACTS]
+        self.terms = [TerminologyTerm(**t) for t in DEFAULT_TERMS]
+        self.visuals = [VisualStandard(**v) for v in DEFAULT_VISUALS]
+        self.save()
+
+    def save(self):
+        data = {
+            "rules": [r.model_dump() for r in self.rules],
+            "facts": [f.model_dump() for f in self.facts],
+            "terms": [t.model_dump() for t in self.terms],
+            "visuals": [v.model_dump() for v in self.visuals]
+        }
+        with open(VAULT_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+
+    def get_rules(self) -> List[BrandRule]:
+        return self.rules
+
+    def get_facts(self) -> List[ApprovedFact]:
+        return self.facts
+
+    def get_terms(self) -> List[TerminologyTerm]:
+        return self.terms
+
+    def get_visuals(self) -> List[VisualStandard]:
+        return self.visuals
+
+    def get_presets(self) -> List[QuickPreset]:
+        return PRESETS
+
+    def add_rule(self, rule: BrandRule) -> BrandRule:
+        self.rules.append(rule)
+        self.save()
+        return rule
+
+    def add_fact(self, fact: ApprovedFact) -> ApprovedFact:
+        self.facts.append(fact)
+        self.save()
+        return fact
+
+    def add_term(self, term: TerminologyTerm) -> TerminologyTerm:
+        self.terms.append(term)
+        self.save()
+        return term
+
+knowledge_vault = KnowledgeVaultService()
