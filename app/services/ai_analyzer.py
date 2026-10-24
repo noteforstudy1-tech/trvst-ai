@@ -74,7 +74,7 @@ If the content has zero issues, findings should be [] and score 100.
 Do NOT wrap the output in markdown codeblocks (no ```json). Output raw valid JSON only.
 """
 
-        endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+        endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
         payload = {
             "contents": [
                 {
@@ -90,7 +90,7 @@ Do NOT wrap the output in markdown codeblocks (no ```json). Output raw valid JSO
         }
 
         try:
-            resp = requests.post(endpoint, json=payload, timeout=8)
+            resp = requests.post(endpoint, json=payload, timeout=15)
             if resp.status_code == 200:
                 data = resp.json()
                 raw_text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
@@ -134,7 +134,7 @@ Do NOT wrap the output in markdown codeblocks (no ```json). Output raw valid JSO
                     risk_level=risk_lvl,
                     findings=findings,
                     summary=summary,
-                    engine_used="Google Gemini 2.0 Flash (Live AI Studio API)",
+                    engine_used="Google Gemini 2.5 Flash (Live AI Studio API)",
                     evaluated_at=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     metrics={
                         "critical_count": sum(1 for f in findings if f.severity == FindingSeverity.CRITICAL),

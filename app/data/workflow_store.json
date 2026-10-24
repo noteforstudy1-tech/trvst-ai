@@ -119,6 +119,66 @@
       "status": "changes_requested",
       "created_at": "2026-10-24 19:22:47",
       "updated_at": "2026-10-24 19:22:47"
+    },
+    "SUB-32965B": {
+      "id": "SUB-32965B",
+      "title": "Fintech Ad Banner",
+      "channel": "Ad Banner & Social",
+      "content_text": "Upgrade to our new Enterprise Plan for only $29/mo! We guarantee 100% risk-free compliance with zero errors forever. Act immediately before it's gone - our unmatched AI is the world's greatest.",
+      "visual_asset_url": null,
+      "author": "Raghav Parashar",
+      "author_role": "creator",
+      "status": "draft",
+      "created_at": "2026-10-24 21:15:40",
+      "updated_at": "2026-10-24 21:15:40"
+    },
+    "SUB-AE798E": {
+      "id": "SUB-AE798E",
+      "title": "Official Launch Press Release",
+      "channel": "Launch Announcement",
+      "content_text": "Introducing TRVST AI Starter: available for $49/month billed annually. Engineered to help teams publish on-brand, accurate, and accessible content with people in control. Backed by our 99.95% uptime SLA, SOC2 Type II compliance, and human-in-the-loop governance.",
+      "visual_asset_url": null,
+      "author": "Vritika Sheth",
+      "author_role": "brand_lead",
+      "status": "draft",
+      "created_at": "2026-10-24 21:15:40",
+      "updated_at": "2026-10-24 21:15:40"
+    },
+    "SUB-67AC7F": {
+      "id": "SUB-67AC7F",
+      "title": "Workflow Test Draft",
+      "channel": "Social Media",
+      "content_text": "We promise designed to mitigate compliance and brand risk compliance for all users.",
+      "visual_asset_url": null,
+      "author": "Tatvagna Tandel",
+      "author_role": "creator",
+      "status": "draft",
+      "created_at": "2026-10-24 21:15:41",
+      "updated_at": "2026-10-24 21:15:41"
+    },
+    "SUB-E46A10": {
+      "id": "SUB-E46A10",
+      "title": "Draft Campaign Review",
+      "channel": "Social Media",
+      "content_text": "We promise 100% risk-free compliance.",
+      "visual_asset_url": null,
+      "author": "Creator",
+      "author_role": "creator",
+      "status": "draft",
+      "created_at": "2026-10-24 22:10:04",
+      "updated_at": "2026-10-24 22:10:04"
+    },
+    "SUB-A0BF9C": {
+      "id": "SUB-A0BF9C",
+      "title": "Draft Campaign Review",
+      "channel": "Social Media",
+      "content_text": "We promise 100% risk-free compliance.",
+      "visual_asset_url": null,
+      "author": "Creator",
+      "author_role": "creator",
+      "status": "draft",
+      "created_at": "2026-10-24 22:10:05",
+      "updated_at": "2026-10-24 22:10:05"
     }
   },
   "reviews": {
@@ -658,9 +718,267 @@
         "char_count": 242,
         "word_count": 33
       }
+    },
+    "SUB-32965B": {
+      "submission_id": "SUB-32965B",
+      "title": "Fintech Ad Banner",
+      "status": "changes_requested",
+      "overall_score": 15,
+      "risk_level": "High Risk (Publication Blocked)",
+      "findings": [
+        {
+          "id": "FIND-3FCC6D",
+          "category": "legal_compliance",
+          "severity": "critical",
+          "title": "Forbidden Term: \"100% risk-free\"",
+          "excerpt": "100% risk-free",
+          "rule_citation": "BR-01: Unqualified Guarantees & Absolute Claims",
+          "rule_id": null,
+          "explanation": "Absolute guarantee forbidden by legal review team. Using this term risks regulatory scrutiny or damages enterprise brand tone.",
+          "suggested_revision": "designed to mitigate compliance and brand risk",
+          "status": "open",
+          "line_number": null
+        },
+        {
+          "id": "FIND-67AA63",
+          "category": "legal_compliance",
+          "severity": "critical",
+          "title": "Forbidden Term: \"zero errors forever\"",
+          "excerpt": "zero errors forever",
+          "rule_citation": "BR-01: Unqualified Guarantees & Absolute Claims",
+          "rule_id": null,
+          "explanation": "Engineering disclaimer: software cannot promise zero defects forever. Using this term risks regulatory scrutiny or damages enterprise brand tone.",
+          "suggested_revision": "continuous high-accuracy automated checks",
+          "status": "open",
+          "line_number": null
+        },
+        {
+          "id": "FIND-BE6020",
+          "category": "brand_voice",
+          "severity": "minor",
+          "title": "Forbidden Term: \"world's greatest\"",
+          "excerpt": "world's greatest",
+          "rule_citation": "BR-03: Unsubstantiated Superlatives & Puffery",
+          "rule_id": null,
+          "explanation": "Unquantified puffery violates brand style guidelines. Using this term risks regulatory scrutiny or damages enterprise brand tone.",
+          "suggested_revision": "industry-leading, benchmarked governance platform",
+          "status": "open",
+          "line_number": null
+        },
+        {
+          "id": "FIND-1C3BCB",
+          "category": "brand_voice",
+          "severity": "minor",
+          "title": "Forbidden Term: \"act immediately before it's gone\"",
+          "excerpt": "Act immediately before it's gone",
+          "rule_citation": "BR-03: Unsubstantiated Superlatives & Puffery",
+          "rule_id": null,
+          "explanation": "High pressure sales tactic contradicts transparent brand persona. Using this term risks regulatory scrutiny or damages enterprise brand tone.",
+          "suggested_revision": "explore our enterprise solutions today",
+          "status": "open",
+          "line_number": null
+        },
+        {
+          "id": "FIND-8D692B",
+          "category": "fact_accuracy",
+          "severity": "moderate",
+          "title": "Stale Legacy Pricing ($29/mo)",
+          "excerpt": "$29/mo",
+          "rule_citation": "BR-02: Current Pricing Standard & Legacy Rates",
+          "rule_id": null,
+          "explanation": "Standard Starter tier is $49/month billed annually. The legacy $29 rate was retired in Q2 2026. Publishing this leads to invoice discrepancies.",
+          "suggested_revision": "$49/month billed annually",
+          "status": "open",
+          "line_number": null
+        }
+      ],
+      "summary": "Flagged 2 critical legal/compliance risks and 3 style warnings. Human approval required.",
+      "engine_used": "TRVST Intelligent Semantic Engine (Offline & Fast)",
+      "evaluated_at": "2026-10-24 21:15:40",
+      "metrics": {
+        "critical_count": 2,
+        "moderate_count": 1,
+        "minor_count": 2,
+        "char_count": 193,
+        "word_count": 31
+      }
+    },
+    "SUB-AE798E": {
+      "submission_id": "SUB-AE798E",
+      "title": "Official Launch Press Release",
+      "status": "approved",
+      "overall_score": 98,
+      "risk_level": "Brand Compliant (Ready to Publish)",
+      "findings": [],
+      "summary": "Content completely satisfies all Knowledge Vault brand guidelines, verified facts, and tone criteria.",
+      "engine_used": "TRVST Intelligent Semantic Engine (Offline & Fast)",
+      "evaluated_at": "2026-10-24 21:15:41",
+      "metrics": {
+        "critical_count": 0,
+        "moderate_count": 0,
+        "minor_count": 0,
+        "char_count": 262,
+        "word_count": 36
+      }
+    },
+    "SUB-67AC7F": {
+      "submission_id": "SUB-67AC7F",
+      "title": "Workflow Test Draft",
+      "status": "changes_requested",
+      "overall_score": 70,
+      "risk_level": "High Risk (Publication Blocked)",
+      "findings": [
+        {
+          "id": "FIND-D3B629",
+          "category": "legal_compliance",
+          "severity": "critical",
+          "title": "Forbidden Term: \"100% risk-free\"",
+          "excerpt": "100% risk-free",
+          "rule_citation": "BR-01: Unqualified Guarantees & Absolute Claims",
+          "rule_id": null,
+          "explanation": "Absolute guarantee forbidden by legal review team. Using this term risks regulatory scrutiny or damages enterprise brand tone.",
+          "suggested_revision": "designed to mitigate compliance and brand risk",
+          "status": "applied",
+          "line_number": null
+        }
+      ],
+      "summary": "Flagged 1 critical legal/compliance risks and 0 style warnings. Human approval required.",
+      "engine_used": "TRVST Intelligent Semantic Engine (Offline & Fast)",
+      "evaluated_at": "2026-10-24 21:15:41",
+      "metrics": {
+        "critical_count": 1,
+        "moderate_count": 0,
+        "minor_count": 0,
+        "char_count": 51,
+        "word_count": 8
+      }
+    },
+    "SUB-E46A10": {
+      "submission_id": "SUB-E46A10",
+      "title": "Draft Campaign Review",
+      "status": "changes_requested",
+      "overall_score": 70,
+      "risk_level": "High Risk (Publication Blocked)",
+      "findings": [
+        {
+          "id": "FIND-BAAE35",
+          "category": "legal_compliance",
+          "severity": "critical",
+          "title": "Forbidden Term: \"100% risk-free\"",
+          "excerpt": "100% risk-free",
+          "rule_citation": "BR-01: Unqualified Guarantees & Absolute Claims",
+          "rule_id": null,
+          "explanation": "Absolute guarantee forbidden by legal review team. Using this term risks regulatory scrutiny or damages enterprise brand tone.",
+          "suggested_revision": "designed to mitigate compliance and brand risk",
+          "status": "open",
+          "line_number": null
+        }
+      ],
+      "summary": "Flagged 1 critical legal/compliance risks and 0 style warnings. Human approval required.",
+      "engine_used": "TRVST Intelligent Semantic Engine (Offline & Fast)",
+      "evaluated_at": "2026-10-24 22:10:05",
+      "metrics": {
+        "critical_count": 1,
+        "moderate_count": 0,
+        "minor_count": 0,
+        "char_count": 37,
+        "word_count": 5
+      }
+    },
+    "SUB-A0BF9C": {
+      "submission_id": "SUB-A0BF9C",
+      "title": "Draft Campaign Review",
+      "status": "changes_requested",
+      "overall_score": 70,
+      "risk_level": "High Risk (Publication Blocked)",
+      "findings": [
+        {
+          "id": "FIND-903E34",
+          "category": "legal_compliance",
+          "severity": "critical",
+          "title": "Forbidden Term: \"100% risk-free\"",
+          "excerpt": "100% risk-free",
+          "rule_citation": "BR-01: Unqualified Guarantees & Absolute Claims",
+          "rule_id": null,
+          "explanation": "Absolute guarantee forbidden by legal review team. Using this term risks regulatory scrutiny or damages enterprise brand tone.",
+          "suggested_revision": "designed to mitigate compliance and brand risk",
+          "status": "open",
+          "line_number": null
+        }
+      ],
+      "summary": "Flagged 1 critical legal/compliance risks and 0 style warnings. Human approval required.",
+      "engine_used": "TRVST Intelligent Semantic Engine (Offline & Fast)",
+      "evaluated_at": "2026-10-24 22:10:05",
+      "metrics": {
+        "critical_count": 1,
+        "moderate_count": 0,
+        "minor_count": 0,
+        "char_count": 37,
+        "word_count": 5
+      }
     }
   },
   "audit_log": [
+    {
+      "id": "LOG-167D06",
+      "timestamp": "2026-10-24 22:10:05",
+      "submission_id": "SUB-A0BF9C",
+      "submission_title": "Draft Campaign Review",
+      "user_role": "creator",
+      "user_name": "Creator",
+      "action_taken": "Content Submitted for Review",
+      "details": "Evaluated against Knowledge Vault: Score 70/100, 1 flags."
+    },
+    {
+      "id": "LOG-AA90DC",
+      "timestamp": "2026-10-24 22:10:05",
+      "submission_id": "SUB-E46A10",
+      "submission_title": "Draft Campaign Review",
+      "user_role": "creator",
+      "user_name": "Creator",
+      "action_taken": "Content Submitted for Review",
+      "details": "Evaluated against Knowledge Vault: Score 70/100, 1 flags."
+    },
+    {
+      "id": "LOG-7677C0",
+      "timestamp": "2026-10-24 21:15:41",
+      "submission_id": "SUB-67AC7F",
+      "submission_title": "Workflow Test Draft",
+      "user_role": "creator",
+      "user_name": "Tatvagna Tandel",
+      "action_taken": "Applied 1-Click Rewrite",
+      "details": "Replaced '100% risk-free' with compliant revision 'designed to mitigate compliance and brand risk'."
+    },
+    {
+      "id": "LOG-B8378A",
+      "timestamp": "2026-10-24 21:15:41",
+      "submission_id": "SUB-67AC7F",
+      "submission_title": "Workflow Test Draft",
+      "user_role": "creator",
+      "user_name": "Tatvagna Tandel",
+      "action_taken": "Content Submitted for Review",
+      "details": "Evaluated against Knowledge Vault: Score 70/100, 1 flags."
+    },
+    {
+      "id": "LOG-71A6E4",
+      "timestamp": "2026-10-24 21:15:41",
+      "submission_id": "SUB-AE798E",
+      "submission_title": "Official Launch Press Release",
+      "user_role": "brand_lead",
+      "user_name": "Vritika Sheth",
+      "action_taken": "Content Submitted for Review",
+      "details": "Evaluated against Knowledge Vault: Score 98/100, 0 flags."
+    },
+    {
+      "id": "LOG-884DDB",
+      "timestamp": "2026-10-24 21:15:40",
+      "submission_id": "SUB-32965B",
+      "submission_title": "Fintech Ad Banner",
+      "user_role": "creator",
+      "user_name": "Raghav Parashar",
+      "action_taken": "Content Submitted for Review",
+      "details": "Evaluated against Knowledge Vault: Score 15/100, 5 flags."
+    },
     {
       "id": "LOG-38978A",
       "timestamp": "2026-10-24 19:22:53",

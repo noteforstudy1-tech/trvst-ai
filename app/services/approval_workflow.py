@@ -59,13 +59,17 @@ class ApprovalWorkflowService:
         self.save()
 
     def save(self):
-        data = {
-            "submissions": {k: v.model_dump() for k, v in self.submissions.items()},
-            "reviews": {k: v.model_dump() for k, v in self.latest_reviews.items()},
-            "audit_log": [a.model_dump() for a in self.audit_log]
-        }
-        with open(WORKFLOW_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+        try:
+            settings.data_dir.mkdir(parents=True, exist_ok=True)
+            data = {
+                "submissions": {k: v.model_dump() for k, v in self.submissions.items()},
+                "reviews": {k: v.model_dump() for k, v in self.latest_reviews.items()},
+                "audit_log": [a.model_dump() for a in self.audit_log]
+            }
+            with open(WORKFLOW_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            print(f"[Workflow] Read-only environment, keeping state in memory: {e}")
 
     def register_submission(self, sub: ContentSubmission, review: ReviewResult):
         self.submissions[sub.id] = sub

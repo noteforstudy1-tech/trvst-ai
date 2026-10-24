@@ -62,7 +62,7 @@ function updateStatusBadge() {
     badge.innerHTML = `
       <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-500/40">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        Gemini 2.0 Flash Active (${state.settings.masked_key})
+        Gemini 2.5 Flash Active (${state.settings.masked_key})
       </span>
     `;
     if (modalInput) modalInput.placeholder = state.settings.masked_key;

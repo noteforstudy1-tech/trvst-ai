@@ -214,14 +214,18 @@ class KnowledgeVaultService:
         self.save()
 
     def save(self):
-        data = {
-            "rules": [r.model_dump() for r in self.rules],
-            "facts": [f.model_dump() for f in self.facts],
-            "terms": [t.model_dump() for t in self.terms],
-            "visuals": [v.model_dump() for v in self.visuals]
-        }
-        with open(VAULT_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+        try:
+            settings.data_dir.mkdir(parents=True, exist_ok=True)
+            data = {
+                "rules": [r.model_dump() for r in self.rules],
+                "facts": [f.model_dump() for f in self.facts],
+                "terms": [t.model_dump() for t in self.terms],
+                "visuals": [v.model_dump() for v in self.visuals]
+            }
+            with open(VAULT_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            print(f"[KnowledgeVault] Read-only environment, keeping state in memory: {e}")
 
     def get_rules(self) -> List[BrandRule]:
         return self.rules

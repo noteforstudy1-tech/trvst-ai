@@ -2,10 +2,10 @@ import uuid
 import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, APIRouter, HTTPException, Body, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from app.config import settings
 from app.models.schemas import (
@@ -31,9 +31,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-STATIC_DIR = Path(__file__).parent / "static"
+# Vercel Serverless Path Resolver Middleware
+@app.middleware("http")
+async def vercel_path_resolver(request: Request, call_next):
+    # When deployed on Vercel with rewrites, Vercel may rewrite path to /api/index.py
+    # and pass the original matched path in 'x-matched-path' or 'x-forwarded-uri'
+    matched_path = request.headers.get("x-matched-path") or request.headers.get("x-forwarded-uri")
+    if matched_path and request.scope.get("path") in ["/api/index.py", "/index.py", "/api"]:
+        request.scope["path"] = matched_path
 
-@app.get("/api/health")
+    response = await call_next(request)
+    return response
+
+api_router = APIRouter()
+
+@api_router.get("/health")
 def health_check():
     key = settings.gemini_api_key.strip()
     return {
@@ -42,10 +54,10 @@ def health_check():
         "team": "Spider",
         "version": "1.0.0",
         "gemini_configured": bool(key and len(key) > 5),
-        "active_engine": "Gemini 2.0 Flash (Live)" if bool(key and len(key) > 5) else "TRVST Semantic Engine (Local)"
+        "active_engine": "Gemini 2.5 Flash (Live)" if bool(key and len(key) > 5) else "TRVST Semantic Engine (Local)"
     }
 
-@app.get("/api/settings/status")
+@api_router.get("/settings/status")
 def get_settings_status():
     key = settings.gemini_api_key.strip()
     masked = f"{key[:7]}...{key[-4:]}" if len(key) > 11 else ("configured" if key else "not configured")
@@ -55,7 +67,7 @@ def get_settings_status():
         "app_env": settings.app_env
     }
 
-@app.post("/api/settings/gemini-key")
+@api_router.post("/settings/gemini-key")
 def update_gemini_key(req: ApiKeyUpdateRequest):
     settings.update_gemini_key(req.api_key)
     return {
@@ -64,11 +76,11 @@ def update_gemini_key(req: ApiKeyUpdateRequest):
         "masked_key": f"{req.api_key[:7]}...{req.api_key[-4:]}" if len(req.api_key) > 11 else "updated"
     }
 
-@app.get("/api/presets")
+@api_router.get("/presets")
 def get_presets():
     return knowledge_vault.get_presets()
 
-@app.post("/api/review", response_model=ReviewResult)
+@api_router.post("/review", response_model=ReviewResult)
 def run_review(payload: Dict[str, Any] = Body(...)):
     text = payload.get("content_text", "").strip()
     if not text:
@@ -98,7 +110,7 @@ def run_review(payload: Dict[str, Any] = Body(...)):
 
     return review_result
 
-@app.post("/api/workflow/action")
+@api_router.post("/workflow/action")
 def workflow_action(req: ApprovalActionRequest):
     try:
         res = approval_service.handle_action(req)
@@ -109,43 +121,50 @@ def workflow_action(req: ApprovalActionRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/api/workflow/audit-log")
+@api_router.get("/workflow/audit-log")
 def get_audit_log(submission_id: str = None):
     return approval_service.get_audit_log(submission_id)
 
-@app.get("/api/knowledge-vault/rules")
+@api_router.get("/knowledge-vault/rules")
 def get_rules():
     return knowledge_vault.get_rules()
 
-@app.post("/api/knowledge-vault/rules")
+@api_router.post("/knowledge-vault/rules")
 def add_rule(rule: BrandRule):
     return knowledge_vault.add_rule(rule)
 
-@app.get("/api/knowledge-vault/facts")
+@api_router.get("/knowledge-vault/facts")
 def get_facts():
     return knowledge_vault.get_facts()
 
-@app.post("/api/knowledge-vault/facts")
+@api_router.post("/knowledge-vault/facts")
 def add_fact(fact: ApprovedFact):
     return knowledge_vault.add_fact(fact)
 
-@app.get("/api/knowledge-vault/terms")
+@api_router.get("/knowledge-vault/terms")
 def get_terms():
     return knowledge_vault.get_terms()
 
-@app.post("/api/knowledge-vault/terms")
+@api_router.post("/knowledge-vault/terms")
 def add_term(term: TerminologyTerm):
     return knowledge_vault.add_term(term)
 
-@app.get("/api/knowledge-vault/visuals")
+@api_router.get("/knowledge-vault/visuals")
 def get_visuals():
     return knowledge_vault.get_visuals()
 
-@app.get("/api/analytics/dashboard")
+@api_router.get("/analytics/dashboard")
 def get_dashboard():
     return analytics_service.get_dashboard_metrics()
 
-# Serve static frontend
+# Include router for BOTH "/api" AND "" prefixes to guarantee Vercel & local compatibility
+app.include_router(api_router, prefix="/api")
+app.include_router(api_router, prefix="")
+
+# Static file serving (for local development)
+STATIC_DIR = Path(__file__).parent / "static"
+PUBLIC_DIR = Path(__file__).parent.parent / "public"
+
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
